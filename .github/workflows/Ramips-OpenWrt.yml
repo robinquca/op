@@ -101,7 +101,6 @@ jobs:
         #替换quectel_MHI和新增cr6606
         rm -rf package/wwan/driver/quectel_MHI
         git clone --depth=1 https://github.com/robinquca/quectel_MHI
-        git clone --depth=1 https://github.com/robinquca/quectel_MHI
         cp quectel_MHI/mt7621.mk .
         cp quectel_MHI/mt7621_xiaomi_mi-router-cr6606.dts .
         tar -xvf quectel_MHI/quectel_MHI.tar.gz -C package/wwan/driver
