@@ -101,13 +101,16 @@ jobs:
         #替换quectel_MHI和新增cr6606
         rm -rf package/wwan/driver/quectel_MHI
         git clone --depth=1 https://github.com/robinquca/quectel_MHI
+        git clone --depth=1 https://github.com/robinquca/quectel_MHI
+        cp quectel_MHI/mt7621.mk .
+        cp quectel_MHI/mt7621_xiaomi_mi-router-cr6606.dts .
         tar -xvf quectel_MHI/quectel_MHI.tar.gz -C package/wwan/driver
+        cp mt7621.mk target/linux/ramips/image/mt7621.mk
+        cp mt7621_xiaomi_mi-router-cr6606.dts target/linux/ramips/dts/
         #新增modem拨号插件
         sed -i "/src-git modem /d; 1 i src-git modem https://github.com/FUjr/QModem.git" feeds.conf.default
         #新增quectel_cm_5G插件
         sed -i "/src-git quectel_cm_5G /d; 1 i src-git quectel_cm_5G https://github.com/QMODEM/quectel-CM-5G" feeds.conf.default
-        cp -f quectel_MHI/mt7621.mk target/linux/ramips/image/mt7621.mk
-        cp quectel_MHI/mt7621_xiaomi_mi-router-cr6606.dts‎ target/linux/ramips/dts
         
         git clone --depth=1 https://github.com/SAENE/luci-theme-design package/luci-theme-design
         ./scripts/feeds update -a
