@@ -97,7 +97,7 @@ jobs:
         ccache: false
         mixkey: ${{ env.SOURCE_REPO }}-${{ env.REPO_BRANCH }}-${{ env.DEVICE_TARGET }}-${{ env.DEVICE_SUBTARGET }}
         prefix: ${{ env.OPENWRT_PATH }}
-
+    
     - name: 安装 Feeds
       run: |
         cd $OPENWRT_PATH
@@ -113,8 +113,10 @@ jobs:
         #新增quectel_cm_5G插件
         sed -i "/src-git quectel_cm_5G /d; 1 i src-git quectel_cm_5G https://github.com/xx-vv/quectel_cm_5G" feeds.conf.default
         cp -f quectel_MHI/mt7621.mk target/linux/ramips/image/mt7621.mk
-        cp quectel_MHI/mt7621_c8_571.dts target/linux/ramips/dts
-        
+        cp quectel_MHI/mt7621_c8_571.dts target/linux/ramips/dts |
+        set -x
+        ./scripts/feeds update -a
+        ./scripts/feeds install -a
         
         
         #sed -i "/src-git 5g /d; 1 i src-git 5g https://github.com/498110811/5G-Modem-Support.git" feeds.conf.default
