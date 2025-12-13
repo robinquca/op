@@ -2,14 +2,11 @@ name: Ramips OpenWrt
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: 0 18 * * *
 
 env:
   REPO_URL: https://github.com/coolsnowwolf/lede
   REPO_BRANCH: master
   CONFIG_FILE: configs/ramips.config
-  #EXTRA_CONFIG: configs/extra.config
   DIY_SCRIPT: ramips.sh
   CLASH_KERNEL: Ramips
   CACHE_TOOLCHAIN: true
@@ -101,25 +98,17 @@ jobs:
     - name: 安装 Feeds
       run: |
         cd $OPENWRT_PATH
-        #替换quectel_MHI和新增c8-571
+        #替换quectel_MHI和新增cr6606
         rm -rf package/wwan/driver/quectel_MHI
-        git clone --depth=1 https://github.com/498110811/quectel_MHI
+        git clone --depth=1 https://github.com/robinquca/quectel_MHI
         tar -xvf quectel_MHI/quectel_MHI.tar.gz -C package/wwan/driver
-        #修改luci源
-        #sed -i 's/coolsnowwolf\/luci.git;openwrt-23.05/498110811\/luci.git/g' feeds.conf.default
-        #sed -i 's/coolsnowwolf\/luci.git;openwrt-23.05/coolsnowwolf\/luci.git/g' feeds.conf.default
         #新增modem拨号插件
         sed -i "/src-git modem /d; 1 i src-git modem https://github.com/FUjr/QModem.git" feeds.conf.default
         #新增quectel_cm_5G插件
-        sed -i "/src-git quectel_cm_5G /d; 1 i src-git quectel_cm_5G https://github.com/xx-vv/quectel_cm_5G" feeds.conf.default
+        sed -i "/src-git quectel_cm_5G /d; 1 i src-git quectel_cm_5G https://github.com/QMODEM/quectel-CM-5G" feeds.conf.default
         cp -f quectel_MHI/mt7621.mk target/linux/ramips/image/mt7621.mk
-        cp quectel_MHI/mt7621_c8_571.dts target/linux/ramips/dts |
-        set -x
-        ./scripts/feeds update -a
-        ./scripts/feeds install -a
+        cp quectel_MHI/mt7621_xiaomi_mi-router-cr6606.dts target/linux/ramips/dts
         
-        
-        #sed -i "/src-git 5g /d; 1 i src-git 5g https://github.com/498110811/5G-Modem-Support.git" feeds.conf.default
         git clone --depth=1 https://github.com/SAENE/luci-theme-design package/luci-theme-design
         ./scripts/feeds update -a
         ./scripts/feeds install -a
@@ -132,7 +121,6 @@ jobs:
 
     - name: 加载自定义配置
       run: |
-        #git checkout 468d14896b501b62c7ece93368dbd82e33e6937f
         [ -e files ] && mv files $OPENWRT_PATH/files
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE $OPENWRT_PATH/.config
         #cat $EXTRA_CONFIG >> $OPENWRT_PATH/.config
@@ -142,7 +130,7 @@ jobs:
         $GITHUB_WORKSPACE/$DIY_SCRIPT
         #$GITHUB_WORKSPACE/scripts/preset-clash-core.sh $CLASH_KERNEL
         #$GITHUB_WORKSPACE/scripts/preset-terminal-tools.sh
-       # $GITHUB_WORKSPACE/scripts/preset-adguard-core.sh $CLASH_KERNEL
+        #$GITHUB_WORKSPACE/scripts/preset-adguard-core.sh $CLASH_KERNEL
         #ls $OPENWRT_PATH/package
 
     - name: 下载DL包
