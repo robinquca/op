@@ -110,6 +110,8 @@ jobs:
         sed -i "/src-git modem /d; 1 i src-git modem https://github.com/FUjr/QModem.git" feeds.conf.default
         #新增quectel_cm_5G插件
         #sed -i "/src-git quectel_cm_5G /d; 1 i src-git quectel_cm_5G https://github.com/QMODEM/quectel-CM-5G" feeds.conf.default
+        # >>> REMOVE quectel-CM-5G dependency
+        sed -i '/quectel-CM-5G/d' package/wwan/driver/quectel_MHI/Makefile
         
         git clone --depth=1 https://github.com/SAENE/luci-theme-design package/luci-theme-design
         ./scripts/feeds update -a
