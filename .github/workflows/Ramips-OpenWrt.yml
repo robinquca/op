@@ -114,26 +114,15 @@ jobs:
         git clone --depth=1 https://github.com/SAENE/luci-theme-design package/luci-theme-design
         ./scripts/feeds update -a
         ./scripts/feeds install -a
-        # 修改默认皮肤
-        sed -i 's/luci-theme-bootstrap/luci-theme-design/g' feeds/luci/collections/luci/Makefile
-        sed -i 's/luci-theme-bootstrap/luci-theme-design/g' feeds/luci/collections/luci-nginx/Makefile
-        sed -i 's/luci-theme-bootstrap/luci-theme-design/g' feeds/luci/collections/luci-ssl-nginx/Makefile
-        sed -i 's/luci-theme-bootstrap/luci-theme-design/g' feeds/luci/collections/luci-light/Makefile
 
     - name: 加载自定义配置
       run: |
         #git checkout 468d14896b501b62c7ece93368dbd82e33e6937f
         [ -e files ] && mv files $OPENWRT_PATH/files
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE $OPENWRT_PATH/.config
-        #cat $EXTRA_CONFIG >> $OPENWRT_PATH/.config
-        #chmod +x $GITHUB_WORKSPACE/scripts/*.sh
         chmod +x $DIY_SCRIPT
         cd $OPENWRT_PATH
         $GITHUB_WORKSPACE/$DIY_SCRIPT
-        #$GITHUB_WORKSPACE/scripts/preset-clash-core.sh $CLASH_KERNEL
-        #$GITHUB_WORKSPACE/scripts/preset-terminal-tools.sh
-       # $GITHUB_WORKSPACE/scripts/preset-adguard-core.sh $CLASH_KERNEL
-        #ls $OPENWRT_PATH/package
 
     - name: 下载DL包
       run: |
@@ -174,7 +163,7 @@ jobs:
         cp $OPENWRT_PATH/.config build.config
         mv -f $OPENWRT_PATH/bin/packages/*/*/*.ipk packages
         tar -zcf Packages.tar.gz packages
-        rm -rf packages feeds.buildinfo version.buildinfo profiles.json sha256sums openwrt-ramips-mt7621-c8_571-initramfs-kernel.bin
+        rm -rf packages feeds.buildinfo version.buildinfo profiles.json sha256sums openwrt-ramips-mt7621-xiaomi_mi-router-cr660x-initramfs-kernel.bin
         echo "KERNEL=$(cat *.manifest | grep ^kernel | cut -d- -f2 | tr -d ' ')" >> $GITHUB_ENV
         echo "FIRMWARE_PATH=$PWD" >> $GITHUB_ENV
 
@@ -197,18 +186,12 @@ jobs:
         body: |
           **This is OpenWrt Firmware for ${{ env.FIRMWARE_TAG }}**
           ### 📒 固件信息
-          - 💻 平台架构: ${{ env.DEVICE_TARGET }}-${{ env.DEVICE_SUBTARGET }}（C8-571）
+          - 💻 平台架构: ${{ env.DEVICE_TARGET }}-${{ env.DEVICE_SUBTARGET }}（xiaomi_mi-router-cr660x）
           - ⚽ 固件源码: ${{ env.REPO_URL }}
           - 💝 源码分支: ${{ env.REPO_BRANCH }}
           - 🚀 内核版本: ${{ env.KERNEL }}
           - 🌐 默认地址: 192.168.1.2
           - 🔑 默认密码: password
-          ### 🧊 固件版本
-          - 固件编译前最后一次➦[主源码](${{ env.REPO_URL }})更新记录
-          - ${{ env.COMMIT_AUTHOR }}
-          - ${{ env.COMMIT_DATE }}
-          - ${{ env.COMMIT_MESSAGE }}
-          - ${{ env.COMMIT_HASH }}
           
     - name: 删除旧版 Workflows
       uses: Mattraks/delete-workflow-runs@main
