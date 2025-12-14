@@ -115,6 +115,20 @@ jobs:
         ./scripts/feeds update -a
         ./scripts/feeds install -a
 
+    - name: Patch QModem (USB-only, remove PCIe/MHI)
+      run: |
+        QMODEM_MK=$OPENWRT_PATH/package/feeds/modem/qmodem/Makefile
+        if [ -f "$QMODEM_MK" ]; then
+          cp $QMODEM_MK ${QMODEM_MK}.bak
+          sed -i '/kmod-pcie_mhi/d' $QMODEM_MK
+          sed -i '/quectel-CM-5G/d' $QMODEM_MK
+          sed -i '/pcie_mhi/d' $QMODEM_MK
+          sed -i '/MHI/d' $QMODEM_MK
+          echo "QModem patched to USB-only."
+        else
+          echo "Warning: QModem Makefile not found!"
+        fi
+
     - name: 加载自定义配置
       run: |
         #git checkout 468d14896b501b62c7ece93368dbd82e33e6937f
@@ -123,6 +137,11 @@ jobs:
         chmod +x $DIY_SCRIPT
         cd $OPENWRT_PATH
         $GITHUB_WORKSPACE/$DIY_SCRIPT
+        
+    - name: 清理旧缓存
+      run: |
+        cd $OPENWRT_PATH
+        make dirclean || true
 
     - name: 下载DL包
       run: |
