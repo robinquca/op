@@ -114,6 +114,15 @@ jobs:
         ./scripts/feeds update -a
         ./scripts/feeds install -a
 
+    - name: 加载自定义配置
+      run: |
+        #git checkout 468d14896b501b62c7ece93368dbd82e33e6937f
+        [ -e files ] && mv files $OPENWRT_PATH/files
+        [ -e $CONFIG_FILE ] && mv $CONFIG_FILE $OPENWRT_PATH/.config
+        chmod +x $DIY_SCRIPT
+        cd $OPENWRT_PATH
+        $GITHUB_WORKSPACE/$DIY_SCRIPT
+        
     - name: Patch QModem (USB-only, remove PCIe/MHI)
       run: |
         QMODEM_MK=$OPENWRT_PATH/package/feeds/modem/qmodem/Makefile
@@ -153,20 +162,6 @@ jobs:
         else
           echo "Warning: mt76 Makefile not found!"
         fi
-
-    - name: 加载自定义配置
-      run: |
-        #git checkout 468d14896b501b62c7ece93368dbd82e33e6937f
-        [ -e files ] && mv files $OPENWRT_PATH/files
-        [ -e $CONFIG_FILE ] && mv $CONFIG_FILE $OPENWRT_PATH/.config
-        chmod +x $DIY_SCRIPT
-        cd $OPENWRT_PATH
-        $GITHUB_WORKSPACE/$DIY_SCRIPT
-        
-    - name: 清理旧缓存
-      run: |
-        cd $OPENWRT_PATH
-        make dirclean || true
 
     - name: 下载DL包
       run: |
