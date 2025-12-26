@@ -105,7 +105,6 @@ jobs:
         cp quectel_MHI/mt7621.mk .
         cp quectel_MHI/mt7621_xiaomi_mi-router-cr6606.dts .
         tar -xvf quectel_MHI/quectel_MHI.tar.gz -C package/wwan/driver
-        cp mt7621.mk target/linux/ramips/image/mt7621.mk
         cp mt7621_xiaomi_mi-router-cr6606.dts target/linux/ramips/dts/
         #新增modem拨号插件
         sed -i "/src-git modem /d; 1 i src-git modem https://github.com/FUjr/QModem.git" feeds.conf.default
