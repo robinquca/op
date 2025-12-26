@@ -133,31 +133,31 @@ jobs:
           echo "Warning: QModem Makefile not found!"
         fi
         
-    - name: Patch mac80211 (disable build)
-      run: |
-        MAC80211_MK=openwrt/package/kernel/mac80211/Makefile
-        if [ -f "$MAC80211_MK" ]; then
-          cp $MAC80211_MK ${MAC80211_MK}.bak
-          sed -i 's/^include $(INCLUDE_DIR)\/kernel.mk/#&/' $MAC80211_MK
-          sed -i 's/^include $(INCLUDE_DIR)\/package.mk/#&/' $MAC80211_MK
-          sed -i 's/^PKG_BUILD_DIR/#PKG_BUILD_DIR/' $MAC80211_MK
-          echo "mac80211 build disabled."
-        else
-          echo "Warning: mac80211 Makefile not found!"
-        fi
+   # - name: Patch mac80211 (disable build)
+   #   run: |
+   #     MAC80211_MK=openwrt/package/kernel/mac80211/Makefile
+   #     if [ -f "$MAC80211_MK" ]; then
+   #       cp $MAC80211_MK ${MAC80211_MK}.bak
+   #       sed -i 's/^include $(INCLUDE_DIR)\/kernel.mk/#&/' $MAC80211_MK
+   #       sed -i 's/^include $(INCLUDE_DIR)\/package.mk/#&/' $MAC80211_MK
+   #       sed -i 's/^PKG_BUILD_DIR/#PKG_BUILD_DIR/' $MAC80211_MK
+   #       echo "mac80211 build disabled."
+   #     else
+   #       echo "Warning: mac80211 Makefile not found!"
+   #     fi
         
-    - name: Patch mt76 (disable build)
-      run: |
-        MT76_MK=openwrt/package/kernel/mt76/Makefile
-        if [ -f "$MT76_MK" ]; then
-          cp $MT76_MK ${MT76_MK}.bak
-          sed -i '/mac80211/d' $MT76_MK
-          sed -i '/cfg80211/d' $MT76_MK
-          sed -i '/KernelPackage\/mt76/,+80d' $MT76_MK
-          echo "mt76 patched: build disabled."
-        else
-          echo "Warning: mt76 Makefile not found!"
-        fi
+   # - name: Patch mt76 (disable build)
+   #   run: |
+   #     MT76_MK=openwrt/package/kernel/mt76/Makefile
+   #     if [ -f "$MT76_MK" ]; then
+   #       cp $MT76_MK ${MT76_MK}.bak
+   #       sed -i '/mac80211/d' $MT76_MK
+   #       sed -i '/cfg80211/d' $MT76_MK
+   #       sed -i '/KernelPackage\/mt76/,+80d' $MT76_MK
+   #       echo "mt76 patched: build disabled."
+   #     else
+   #       echo "Warning: mt76 Makefile not found!"
+   #     fi
 
     - name: 下载DL包
       run: |
