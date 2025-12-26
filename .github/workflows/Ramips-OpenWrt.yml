@@ -133,18 +133,18 @@ jobs:
           echo "Warning: QModem Makefile not found!"
         fi
         
-   # - name: Patch mac80211 (disable build)
-   #   run: |
-   #     MAC80211_MK=openwrt/package/kernel/mac80211/Makefile
-   #     if [ -f "$MAC80211_MK" ]; then
-   #       cp $MAC80211_MK ${MAC80211_MK}.bak
-   #       sed -i 's/^include $(INCLUDE_DIR)\/kernel.mk/#&/' $MAC80211_MK
-   #       sed -i 's/^include $(INCLUDE_DIR)\/package.mk/#&/' $MAC80211_MK
-   #       sed -i 's/^PKG_BUILD_DIR/#PKG_BUILD_DIR/' $MAC80211_MK
-   #       echo "mac80211 build disabled."
-   #     else
-   #       echo "Warning: mac80211 Makefile not found!"
-   #     fi
+    - name: Patch mac80211 (disable build)
+      run: |
+        MAC80211_MK=openwrt/package/kernel/mac80211/Makefile
+        if [ -f "$MAC80211_MK" ]; then
+          cp $MAC80211_MK ${MAC80211_MK}.bak
+          sed -i 's/^include $(INCLUDE_DIR)\/kernel.mk/#&/' $MAC80211_MK
+          sed -i 's/^include $(INCLUDE_DIR)\/package.mk/#&/' $MAC80211_MK
+          sed -i 's/^PKG_BUILD_DIR/#PKG_BUILD_DIR/' $MAC80211_MK
+          echo "mac80211 build disabled."
+        else
+          echo "Warning: mac80211 Makefile not found!"
+        fi
         
    # - name: Patch mt76 (disable build)
    #   run: |
