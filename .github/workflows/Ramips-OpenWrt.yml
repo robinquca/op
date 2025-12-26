@@ -78,8 +78,6 @@ jobs:
       run: |
         cp $CONFIG_FILE $OPENWRT_PATH/.config
         cd $OPENWRT_PATH
-        # 替换目标设备为 CR6606
-        # sed -i 's/CONFIG_TARGET_DEVICE_ramips_mt7621_c8_571=y/CONFIG_TARGET_DEVICE_ramips_mt7621_xiaomi_mi-router-cr6606=y/' .config
         make defconfig > /dev/null 2>&1
         SOURCE_REPO="$(echo $REPO_URL | awk -F '/' '{print $(NF)}')"
         echo "SOURCE_REPO=$SOURCE_REPO" >> $GITHUB_ENV
@@ -102,7 +100,6 @@ jobs:
         cd $OPENWRT_PATH
         rm -rf package/wwan/driver/quectel_MHI
         git clone --depth=1 https://github.com/robinquca/quectel_MHI
-        cp quectel_MHI/mt7621.mk .
         cp quectel_MHI/mt7621_xiaomi_mi-router-cr6606.dts .
         tar -xvf quectel_MHI/quectel_MHI.tar.gz -C package/wwan/driver
         cp mt7621_xiaomi_mi-router-cr6606.dts target/linux/ramips/dts/
