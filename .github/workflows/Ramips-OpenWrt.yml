@@ -146,18 +146,18 @@ jobs:
           echo "Warning: mac80211 Makefile not found!"
         fi
         
-   # - name: Patch mt76 (disable build)
-   #   run: |
-   #     MT76_MK=openwrt/package/kernel/mt76/Makefile
-   #     if [ -f "$MT76_MK" ]; then
-   #       cp $MT76_MK ${MT76_MK}.bak
-   #       sed -i '/mac80211/d' $MT76_MK
-   #       sed -i '/cfg80211/d' $MT76_MK
-   #       sed -i '/KernelPackage\/mt76/,+80d' $MT76_MK
-   #       echo "mt76 patched: build disabled."
-   #     else
-   #       echo "Warning: mt76 Makefile not found!"
-   #     fi
+    - name: Patch mt76 (disable build)
+      run: |
+        MT76_MK=openwrt/package/kernel/mt76/Makefile
+        if [ -f "$MT76_MK" ]; then
+          cp $MT76_MK ${MT76_MK}.bak
+          sed -i '/mac80211/d' $MT76_MK
+          sed -i '/cfg80211/d' $MT76_MK
+          sed -i '/KernelPackage\/mt76/,+80d' $MT76_MK
+          echo "mt76 patched: build disabled."
+        else
+          echo "Warning: mt76 Makefile not found!"
+        fi
 
     - name: 下载DL包
       run: |
